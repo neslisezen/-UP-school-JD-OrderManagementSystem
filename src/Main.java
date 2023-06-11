@@ -7,6 +7,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+
 public class Main {
 
   public static void main(String[] args) {
@@ -70,5 +72,11 @@ public class Main {
                 product.getProductStatus()));
     System.out.println("Active products :");
     filteredProducts.forEach(System.out::println);
+    System.out.println();
+    System.out.println("************************************************");
+    System.out.println("getCategoryPriceSum: "+manager.getCategoryPriceSum());
+    System.out.println("calculateAveragePriceInCategory Category 1:  "+manager.calculateAveragePriceInCategory("Category 1"));
+    System.out.println("calculateAveragePriceInCategory Category 2:  "+manager.calculateAveragePriceInCategory("Category 2"));
+    System.out.println("getActiveProductsSortedByPrice: "+manager.getActiveProductsSortedByPrice());
   }
 }

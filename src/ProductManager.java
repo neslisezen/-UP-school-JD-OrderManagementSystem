@@ -12,13 +12,15 @@ import java.util.stream.Collectors;
 
 public class ProductManager {
 
-  private Map<String, Product> products;  // veritabanı
+  private Map<String, Product> products;  //database
+  //String-KEY: id     Product-VALUE: product
 
   private Map<String, Supplier<String>> orderNumberSuppliers;
+  // orderNumberSuppliers.put(supplierId, supplier)
 
   private List<Order> orders;
 
-  public ProductManager() {
+  public ProductManager() {  //constructor, give reference 
     products = new HashMap<>();
     orderNumberSuppliers = new HashMap<>();
     orders = new ArrayList<>();
@@ -30,6 +32,7 @@ public class ProductManager {
 
   public Product getProductById(String productId) {
     return products.get(productId);
+    //using Key(id), get value
   }
 
   public List<Product> filterProducts(Predicate<Product> filterPredicate) {
@@ -104,22 +107,29 @@ public class ProductManager {
   }
 
   public List<Product> getActiveProductsSortedByPrice() {
-    // ProductStatus'ü ACTIVE olan ürünleri fiyatlarına göre sıralayıp döndüren metodu yazın
-    return null;
+	  
+    List<Product> getActiveProducts = products.values().stream().filter(entrySet -> ProductStatus.ACTIVE.equals(entrySet.getProductStatus()))
+    		.sorted(Comparator.comparing(Product::getPrice))
+    		.collect(Collectors.toList());
+    
+    		return getActiveProducts;
+                          
   }
 
   public double calculateAveragePriceInCategory(String category) {
-    // String olarak verilen category'e ait olan ürünlerin fiyatlarının ortalamasını yoksa 0.0 döndüren metodu yazın
-    // tip: OptionalDouble kullanımını inceleyin.
-    return 0.0;
+
+	  OptionalDouble averagePriceInCategory = OptionalDouble.of(products.values().stream()
+			  .filter(list -> category.equals(list.getCategory()))
+    		  .collect(Collectors.summingDouble(entrySet -> entrySet.getPrice() * entrySet.getStock())));
+    
+      return averagePriceInCategory.orElse(0.0);
+	
   }
 
   public Map<String, Double> getCategoryPriceSum() {
-    // category'lere göre gruplayıp, her bir kategoride bulunan ürünlerin toplam fiyatını stream ile hesaplayıp
-    // döndüren metodu yazın
-    // örn:
-    // category-1 105.2
-    // category-2 45.0
-    return null;
+  
+	  Map<String, Double> priceSumByCategory = products.values().stream().collect(Collectors.groupingBy(Product::getCategory, Collectors
+			  .summingDouble(entrySet -> entrySet.getPrice() * entrySet.getStock())));
+	  return priceSumByCategory;
   }
 }
